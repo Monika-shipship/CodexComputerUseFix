@@ -106,6 +106,7 @@ Computer Use helper
 ```text
 capture-compat/
 ├─ README.md              构建与使用指南
+├─ README_en.md           英文构建与使用指南
 ├─ build.ps1              编译 DLL、探针并运行单元测试
 ├─ install.ps1            安装、卸载及文件校验
 ├─ package.ps1            生成发布 ZIP 和 SHA-256 校验文件

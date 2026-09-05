@@ -1,5 +1,7 @@
 # 实现说明
 
+[简体中文](implementation.md) | [English](implementation_en.md)
+
 本文描述当前源码中的加载、COM 兼容和事件派发机制。使用步骤见[构建与使用指南](../README.md)。
 
 ## 模块分工

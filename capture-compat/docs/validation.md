@@ -1,5 +1,7 @@
 # 验证与排错
 
+[简体中文](validation.md) | [English](validation_en.md)
+
 使用前先按[构建与使用指南](../README.md)完成构建。以下命令均从 `capture-compat` 目录运行。
 
 ## 验证层次

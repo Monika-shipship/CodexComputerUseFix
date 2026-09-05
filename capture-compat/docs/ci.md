@@ -1,5 +1,7 @@
 # CI 与 Release
 
+[简体中文](ci.md) | [English](ci_en.md)
+
 工作流位于 [build.yml](../../.github/workflows/build.yml)，打包逻辑位于 [package.ps1](../package.ps1)。
 
 ## 触发方式
