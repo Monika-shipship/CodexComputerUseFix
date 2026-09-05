@@ -15,7 +15,13 @@ After installation, use Computer Use as usual. No separate proxy process or addi
 
 The project targets Windows 10 x64. Compatibility hooks are enabled for `codex-computer-use.exe` and the test program `compat_probe.exe`. Changes are confined to processes that load the DLL; system DLLs are not modified and no global hooks are registered.
 
-## Quick start
+## Download a prebuilt release
+
+Download `CodexCaptureCompat-<version>-windows-x64.zip` from [GitHub Releases](https://github.com/MagicalAstrogy/CodexComputerUseFix/releases). Extract the complete archive, then follow the usage instructions below. No compiler toolchain is needed. Archives with a `-trace` suffix are diagnostic builds; use the regular build for everyday operation.
+
+Each ZIP has a `.sha256` checksum file and includes the installer, probes, documentation, and source. See the [CI and release guide (Chinese)](capture-compat/docs/ci.md) for verification and publishing instructions.
+
+## Build from source
 
 Open PowerShell in the project root:
 
@@ -102,6 +108,7 @@ capture-compat/
 ├─ README.md              Build and usage guide (Chinese)
 ├─ build.ps1              Builds the DLL and tools; runs unit tests
 ├─ install.ps1            Installation, removal, and file verification
+├─ package.ps1            Release ZIP and SHA-256 checksum generation
 ├─ validate.ps1           Live Windows 10 regression tests
 ├─ src/                   DLL proxy, COM hooks, and callback dispatch
 ├─ tests/                 Unit tests, capture probe, and test window
@@ -111,7 +118,23 @@ capture-compat/
 └─ validation/            Test reports and captured images (generated)
 ```
 
-The project's `.gitignore` excludes `build/`, `dist/`, and `validation/`. These directories may not exist in a fresh source checkout.
+The project's `.gitignore` excludes `build/`, `dist/`, and `validation/`. These directories may not exist in a fresh source checkout. Packages are written to `artifacts/` at the repository root, which is also excluded from version control.
+
+## CI and releases
+
+The [Build and release](https://github.com/MagicalAstrogy/CodexComputerUseFix/actions/workflows/build.yml) workflow builds and tests regular and Trace configurations on pushes to `main`, pull requests targeting `main`, and manual runs. Downloadable Actions artifacts are retained for 14 days.
+
+Pushing a version tag such as `v1.0.0` creates a GitHub Release after both builds pass, with two ZIPs and their checksum files. Tags with a suffix such as `-rc.1` produce prereleases. CI covers COM, callback dispatch, installation, and packaging tests; real screenshots still require validation on a Windows 10 interactive desktop.
+
+To publish, first push the workflow and desired source revision to `main`, then tag that commit and push the tag:
+
+```powershell
+# Example version; choose an unused tag for the release.
+git tag -a v1.0.0 -m 'Release v1.0.0'
+git push origin v1.0.0
+```
+
+Manual workflow runs only produce Actions artifacts. Publishing uses the built-in `GITHUB_TOKEN`; no personal access token is required. Existing releases are not overwritten. See the [CI and release guide (Chinese)](capture-compat/docs/ci.md) for local packaging and checksum verification.
 
 ## Scope and compatibility
 
@@ -128,6 +151,7 @@ The detailed guides are currently available in Chinese:
 - [Build and usage](capture-compat/README.md)
 - [Implementation](capture-compat/docs/implementation.md)
 - [Validation and troubleshooting](capture-compat/docs/validation.md)
+- [CI and releases](capture-compat/docs/ci.md)
 
 ## License
 

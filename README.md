@@ -15,7 +15,13 @@
 
 本项目面向 Windows 10 x64。当前实现对 `codex-computer-use.exe` 和测试程序 `compat_probe.exe` 启用兼容钩子，影响范围限于加载该 DLL 的进程；不修改系统 DLL，不注册全局钩子。
 
-## 快速开始
+## 下载预编译版本
+
+从 [GitHub Releases](https://github.com/MagicalAstrogy/CodexComputerUseFix/releases) 下载 `CodexCaptureCompat-<版本>-windows-x64.zip`。解压完整目录后，直接按下方使用方法安装，无需配置编译工具链。文件名带 `-trace` 的包用于诊断，日常使用选择普通版。
+
+每个 ZIP 都附有 `.sha256` 校验文件，并包含安装脚本、探针、文档和源码。校验与发布步骤见 [CI 与 Release 指南](capture-compat/docs/ci.md)。
+
+## 从源码构建
 
 在项目根目录打开 PowerShell：
 
@@ -102,6 +108,7 @@ capture-compat/
 ├─ README.md              构建与使用指南
 ├─ build.ps1              编译 DLL、探针并运行单元测试
 ├─ install.ps1            安装、卸载及文件校验
+├─ package.ps1            生成发布 ZIP 和 SHA-256 校验文件
 ├─ validate.ps1           Windows 10 实机回归
 ├─ src/                   DLL 代理、COM 钩子和回调派发
 ├─ tests/                 单元测试、捕获探针及测试窗口
@@ -111,7 +118,13 @@ capture-compat/
 └─ validation/            验证报告和测试图像（生成）
 ```
 
-`build/`、`dist/` 和 `validation/` 已被工程的 `.gitignore` 排除，源码副本中可能尚不存在这些目录。
+`build/`、`dist/` 和 `validation/` 已被工程的 `.gitignore` 排除，源码副本中可能尚不存在这些目录。打包输出位于仓库根目录的 `artifacts/`，同样不进入版本控制。
+
+## CI 与 Release
+
+[Build and release](https://github.com/MagicalAstrogy/CodexComputerUseFix/actions/workflows/build.yml) 工作流在推送 `main`、向 `main` 提交 PR 或手动运行时，构建并测试普通版和 Trace 版，提供保留 14 天的 Actions 下载产物。
+
+推送 `v1.0.0` 这样的版本标签时，两个构建都通过后自动创建 GitHub Release，上传两个 ZIP 及其校验文件。带 `-rc.1` 等后缀的标签发布为预发布版本。CI 运行 COM、回调派发、安装和打包测试；真实截图仍需在 Windows 10 交互桌面验证。详见 [CI 与 Release 指南](capture-compat/docs/ci.md)。
 
 ## 适用范围
 
@@ -126,6 +139,7 @@ capture-compat/
 - [构建与使用指南](capture-compat/README.md)
 - [实现说明](capture-compat/docs/implementation.md)
 - [验证与排错指南](capture-compat/docs/validation.md)
+- [CI 与 Release 指南](capture-compat/docs/ci.md)
 
 ## 许可证
 
