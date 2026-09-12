@@ -5,10 +5,8 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $helper = (Resolve-Path -LiteralPath $HelperPath).Path
-$helperName = [IO.Path]::GetFileName($helper)
-$supportedHelperNames = @('codex-computer-use.exe', 'codex-computer-use-swift.exe')
-if ($supportedHelperNames -inotcontains $helperName) {
-    throw 'HelperPath must point to codex-computer-use.exe or codex-computer-use-swift.exe, not Codex.exe or a system DLL.'
+if ([IO.Path]::GetFileName($helper) -ine 'codex-computer-use.exe') {
+    throw 'HelperPath must point to codex-computer-use.exe, not Codex.exe or a system DLL.'
 }
 $targetDir = [IO.Path]::GetDirectoryName($helper)
 $target = Join-Path $targetDir 'version.dll'

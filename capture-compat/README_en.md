@@ -75,18 +75,18 @@ For a prebuilt release, preserve the ZIP's complete directory structure and run 
 
 ### Locate the target
 
-Install beside the `codex-computer-use.exe` or `codex-computer-use-swift.exe` that is actually running. You can inspect its path while it is active:
+Install beside the `codex-computer-use.exe` that is actually running. You can inspect its path while it is active:
 
 ```powershell
-Get-Process -Name codex-computer-use,codex-computer-use-swift -ErrorAction SilentlyContinue |
+Get-Process -Name codex-computer-use -ErrorAction SilentlyContinue |
     Select-Object Id, Path
 ```
 
 If multiple processes appear, identify the runtime used by the current Computer Use instance. Do not deploy to every old installation directory. If the process is stopped or access is insufficient, the list may be empty or omit the path.
 
-**Both helpers can coexist.** A desktop host may start the Swift helper and launch the legacy-named helper on demand for native Computer Use. Confirming that Swift loaded the proxy does not establish which process handles screenshots. Trigger an official screenshot request, inspect both process paths, and verify the capture process's loaded modules. Do not rename executables, bypass app approval, or change safety checks to switch routes.
+The host may run `codex-computer-use-swift.exe` while starting `codex-computer-use.exe` only when a native Computer Use request arrives. The presence of Swift alone is not a reason to install beside it. Trigger an official target-window screenshot, then verify the legacy helper path, installation record, and loaded modules. This implementation does not claim support for official Swift capture. See the [local validation record](docs/local-validation-2026-09-12.md) for observations and limitations.
 
-During upgrades the host may restart a helper between uninstall and install, causing it to load the system DLL. Verify loaded modules after the new DLL is in place and restart that helper again if needed. Matching on-disk hashes alone cannot establish that the running process loaded the patch.
+An automatic restart between uninstall and reinstall may load only the system DLL. Check loaded modules after the replacement is in place and restart that helper again if necessary. Matching on-disk hashes alone is not runtime verification. Do not rename official executables, bypass approval, or change input safety checks.
 
 ### First installation
 
@@ -115,7 +115,7 @@ The proxy must be in the helper's directory. The script does not search all runt
 
 | Parameter | Meaning |
 | --- | --- |
-| `-HelperPath <path>` | Required; must point to an existing file named `codex-computer-use.exe` or `codex-computer-use-swift.exe` |
+| `-HelperPath <path>` | Required; must point to an existing file named `codex-computer-use.exe` |
 | `-Action Install` | Installs `dist/version.dll` |
 | `-Action Uninstall` | Removes this project's proxy using its installation record |
 | `-WhatIf` | Previews operations without copying or deleting files; path and existing-file checks still run |

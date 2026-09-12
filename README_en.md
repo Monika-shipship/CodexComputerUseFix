@@ -13,7 +13,7 @@ After installation, use Computer Use as usual. No separate proxy process or addi
 - **Local installation and removal:** Installs the DLL and an installation record beside the helper. Removal verifies the recorded path and DLL hash.
 - **Development tools:** Includes COM unit tests, a probe for real WGC capture, a standalone test window, and optional call tracing.
 
-The project targets Windows 10 x64. Compatibility hooks are enabled for `codex-computer-use.exe`, the newer `codex-computer-use-swift.exe`, and the test program `compat_probe.exe`. Changes are confined to processes that load the DLL; system DLLs are not modified and no global hooks are registered.
+The project targets Windows 10 x64. Compatibility hooks are enabled for `codex-computer-use.exe` and the test program `compat_probe.exe`. Changes are confined to processes that load the DLL; system DLLs are not modified and no global hooks are registered.
 
 ## Download a prebuilt release
 
@@ -48,7 +48,7 @@ Building and running the probe do not automatically install or update the DLL in
 
 ### Installation
 
-Locate the `codex-computer-use.exe` or `codex-computer-use-swift.exe` used by your Computer Use runtime. Replace the placeholder path below with its actual path.
+Locate the `codex-computer-use.exe` used by your Computer Use runtime. Replace the placeholder path below with its actual path.
 
 Run these commands from the `capture-compat` directory:
 
@@ -153,6 +153,7 @@ Detailed guides are available in English and Simplified Chinese:
 - [Implementation](capture-compat/docs/implementation_en.md)
 - [Validation and troubleshooting](capture-compat/docs/validation_en.md)
 - [CI and releases](capture-compat/docs/ci_en.md)
+- [Local cross-application validation](capture-compat/docs/local-validation-2026-09-12.md)
 
 ## License
 

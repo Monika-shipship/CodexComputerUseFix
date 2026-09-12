@@ -18,7 +18,7 @@ This guide describes the loading, COM compatibility, and event dispatch mechanis
 
 ## 1. DLL loading and system export forwarding
 
-When the helper loads the local `version.dll`, the proxy's `DllMain` checks the current executable's filename. Capture hooks are initialized only for `codex-computer-use.exe`, `codex-computer-use-swift.exe`, and `compat_probe.exe`. Other processes that load the proxy receive only the version export forwarding behavior.
+When the helper loads the local `version.dll`, the proxy's `DllMain` checks the current executable's filename. Capture hooks are initialized only for `codex-computer-use.exe` and `compat_probe.exe`. Other processes that load the proxy receive only the version export forwarding behavior.
 
 The proxy preserves the system version DLL's 17 named exports and their ordinals, and adds `CodexCaptureCompatGetStatus` at ordinal 100. On the first version function call, `InitOnceExecuteOnce` loads the original DLL from the system directory, resolves its entries with `GetProcAddress`, and caches them.
 

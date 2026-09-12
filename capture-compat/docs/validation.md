@@ -12,7 +12,7 @@
 | 派发单元测试 | `build.ps1` 自动运行 `dispatch_tests.exe` | 独立 MTA、非阻塞提交、合并通知、取消、对象存活、非 agile 回退及失败统计 |
 | 安装测试 | `tests/install_tests.ps1` | WhatIf、复制哈希、重复安装、卸载和已有未知 DLL 保护 |
 | WGC 实机测试 | `validate.ps1` | 真实帧、像素内容、线程模式、SoftwareBitmap 转换及关闭清理 |
-| 官方接口验证 | 使用已安装补丁的 Computer Use | 实际 `codex-computer-use.exe` 或 `codex-computer-use-swift.exe` 能否返回正确截图 |
+| 官方接口验证 | 使用已安装补丁的 Computer Use | 实际 helper 能否返回正确截图 |
 
 安装测试在 `validation/install-fixture-<随机标识>/` 创建模拟文件，不启动其中的假 helper，也不修改真实运行时。测试完成后目录会保留。
 
@@ -24,17 +24,16 @@
 
 需要正常登录且未锁定的 Windows 10 桌面，以及可用的 Direct3D 11 图形环境。探针只创建并截取自己的蓝色测试窗口，结束后关闭窗口。
 
-脚本运行以下九项检查：
+脚本运行以下八项检查：
 
 1. 无本地代理时，边框接口返回预期的 `E_NOINTERFACE`。
 2. 非目标 EXE 加载代理时，不启用捕获钩子。
-3. 使用 `codex-computer-use-swift.exe` 文件名时启用捕获钩子、接收真实帧并完成异步回调。
-4. 收到真实事件后取帧，并检查蓝色像素。
-5. MTA 捕获线程不处理窗口消息时仍能收到帧。
-6. STA 捕获线程不处理窗口消息时仍能收到帧。
-7. 启动捕获、清空已有帧后再订阅事件。
-8. SoftwareBitmap 转换在被派发的回调内完成。
-9. 帧池关闭时清理仍注册的异步回调。
+3. 收到真实事件后取帧，并检查蓝色像素。
+4. MTA 捕获线程不处理窗口消息时仍能收到帧。
+5. STA 捕获线程不处理窗口消息时仍能收到帧。
+6. 启动捕获、清空已有帧后再订阅事件。
+7. SoftwareBitmap 转换在被派发的回调内完成。
+8. 帧池关闭时清理仍注册的异步回调。
 
 无消息循环测试只停用**捕获线程**的消息处理；测试窗口始终在自己的 UI 线程处理消息。
 
@@ -47,10 +46,9 @@
 | `validation/report.json` | 时间、系统版本、当前 DLL 哈希、各项输出和退出码 |
 | `validation/capture.bmp` | 探针测试窗口的真实捕获图像 |
 | `validation/baseline/` | 不放置代理 DLL 的基线程序 |
-| `validation/unrelated/` | 验证非目标进程名筛选的程序及代理副本 |
-| `validation/swift-helper/` | 验证 Swift helper 进程名筛选的探针及代理副本 |
+| `validation/unrelated/` | 验证进程名筛选的程序及代理副本 |
 
-回归遇到首个失败就停止；报告保留已执行项，因此仅有报告文件不代表全部九项通过。重新运行会覆盖当前报告和图像。上述目录是生成产物，默认不进入版本控制。
+回归遇到首个失败就停止；报告保留已执行项，因此仅有报告文件不代表全部八项通过。重新运行会覆盖当前报告和图像。上述目录是生成产物，默认不进入版本控制。
 
 ## 单独运行探针
 
@@ -109,8 +107,6 @@ New-Item -ItemType Directory -Path .\validation -Force | Out-Null
 
 ## 在官方 helper 中验证
 
-以 `codex-computer-use-swift.exe` 命名的探针仍是本项目探针，不是官方 Swift 实现。它只验证进程名筛选及探针自身的捕获路径，不能证明官方截图或输入成功。两个 helper 共存时，应按[目标路径说明](../README.md#确认目标路径)定位实际处理请求的进程。
-
 安装并重新启动相应 helper 后：
 
 1. 打开 `dist/capture_test_window.exe`。
@@ -120,8 +116,6 @@ New-Item -ItemType Directory -Path .\validation -Force | Out-Null
 5. 分别验证不带截图的辅助功能读取，最后关闭测试窗口。
 
 底层探针没有复刻所有官方调用路径，不能用其通过结果替代这一步。记录当前 helper 和 DLL 的 SHA-256、操作是否成功及调用耗时，便于不同构建之间比较。
-
-2026-09-12 本机端到端测试：Windows 10 Pro 22H2、COMSOL 5.2a，通过官方 `sky` API 激活空白 COMSOL 窗口、获取截图、点击参数面板、输入 `cu_test` 和 `sqrt(3^2+4^2)`，按 Tab 后从截图和辅助功能树确认结果为 `5`。实际截图使用旧名 `codex-computer-use.exe`；仅给并存的 Swift helper 安装补丁时仍报 `0x80004002`。此测试覆盖简单表达式计算，不覆盖有限元求解或所有输入方法；`set_value` 曾超时，最终使用点击与键盘输入完成。
 
 ## 日志定位
 

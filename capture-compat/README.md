@@ -75,18 +75,18 @@
 
 ### 确认目标路径
 
-安装对象是实际运行的 `codex-computer-use.exe` 或 `codex-computer-use-swift.exe`。可以在它运行时只读查看路径：
+安装对象是实际运行的 `codex-computer-use.exe`。可以在它运行时只读查看路径：
 
 ```powershell
-Get-Process -Name codex-computer-use,codex-computer-use-swift -ErrorAction SilentlyContinue |
+Get-Process -Name codex-computer-use -ErrorAction SilentlyContinue |
     Select-Object Id, Path
 ```
 
 如果有多个结果，确认当前 Computer Use 使用的是哪一个 runtime；不要根据某个旧安装目录批量部署。进程未运行或权限不足时，列表可能为空或不显示路径。
 
-**两个 helper 可能同时存在。** 同一 Codex 桌面进程可能启动 Swift helper，并在调用原生 Computer Use 时按需启动旧名 helper。只确认 Swift 进程加载了 DLL，不能证明实际截图请求使用它。先触发官方截图请求，再查看两种进程路径并核对实际截图进程的加载模块。不要通过改名 EXE、跳过应用授权或修改安全检查来切换入口。
+同一宿主可能同时运行 `codex-computer-use-swift.exe`，并在原生 Computer Use 请求到来时才启动 `codex-computer-use.exe`。不能仅凭 Swift 进程存在就把补丁装到它旁边。先通过官方接口触发一次目标窗口截图，再核对旧名 helper 的路径、安装记录和已加载模块。当前实现不声称支持官方 Swift 捕获路径。实际测试及限制见[本机验证记录](docs/local-validation-2026-09-12.md)。
 
-升级时宿主可能在卸载与安装之间立即重启 helper，使其加载系统 DLL。新补丁就位后应再次核对加载模块，必要时再重启该 helper。磁盘文件哈希匹配不能代替此检查。
+宿主自动重启可能发生在卸载与重新安装之间，使进程只加载系统 DLL。新文件就位后仍应核对运行进程的加载模块；必要时再重启这个 helper。不能只凭磁盘上的 DLL 哈希匹配判定补丁已经生效。不要改名官方 EXE、跳过授权或修改输入安全检查。
 
 ### 首次安装
 
@@ -115,7 +115,7 @@ codex-capture-compat.install.json 安装记录
 
 | 参数 | 含义 |
 | --- | --- |
-| `-HelperPath <路径>` | 必填；必须指向已存在、文件名为 `codex-computer-use.exe` 或 `codex-computer-use-swift.exe` 的文件 |
+| `-HelperPath <路径>` | 必填；必须指向已存在、文件名为 `codex-computer-use.exe` 的文件 |
 | `-Action Install` | 安装 `dist/version.dll` |
 | `-Action Uninstall` | 按安装记录卸载本项目代理 |
 | `-WhatIf` | 预览操作，不复制或删除文件；路径与已有文件校验仍会执行 |
