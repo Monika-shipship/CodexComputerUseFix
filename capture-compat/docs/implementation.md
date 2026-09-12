@@ -18,7 +18,7 @@
 
 ## 1. DLL 加载与系统导出转发
 
-helper 加载同目录的 `version.dll` 后，代理的 `DllMain` 检查当前 EXE 的文件名。只有 `codex-computer-use.exe` 和 `compat_probe.exe` 会初始化捕获钩子。其他进程即使加载代理，也只使用 version 导出转发功能。
+helper 加载同目录的 `version.dll` 后，代理的 `DllMain` 检查当前 EXE 的文件名。只有 `codex-computer-use.exe`、`codex-computer-use-swift.exe` 和 `compat_probe.exe` 会初始化捕获钩子。其他进程即使加载代理，也只使用 version 导出转发功能。
 
 代理保留系统 version 的 17 个具名导出及对应序号，并额外提供序号 100 的 `CodexCaptureCompatGetStatus`。首次调用版本查询函数时，`InitOnceExecuteOnce` 从系统目录加载原版 DLL，用 `GetProcAddress` 解析并缓存入口。
 

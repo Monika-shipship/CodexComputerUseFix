@@ -12,7 +12,7 @@ Build the project using the [build and usage guide](../README_en.md) before runn
 | Dispatch unit tests | `build.ps1` automatically runs `dispatch_tests.exe` | Separate MTA execution, nonblocking submission, notification coalescing, cancellation, object lifetime, non-agile fallback, and failure statistics |
 | Installation tests | `tests/install_tests.ps1` | WhatIf, copy hashes, repeated installation, removal, and protection of existing unknown DLLs |
 | Live WGC tests | `validate.ps1` | Real frames, pixel content, threading modes, SoftwareBitmap conversion, and close cleanup |
-| Official interface validation | Computer Use with the compatibility DLL installed | Whether the actual helper returns correct screenshots |
+| Official interface validation | Computer Use with the compatibility DLL installed | Whether the actual `codex-computer-use.exe` or `codex-computer-use-swift.exe` returns correct screenshots |
 
 Installation tests create simulated files under `validation/install-fixture-<random-ID>/`. They do not execute the fake helper or modify a real runtime. The fixture directory is retained after testing.
 
@@ -24,16 +24,17 @@ Installation tests create simulated files under `validation/install-fixture-<ran
 
 The suite requires a logged-in, unlocked Windows 10 desktop and a working Direct3D 11 graphics environment. Each probe creates and captures its own blue test window, then closes it.
 
-The script runs eight checks:
+The script runs nine checks:
 
 1. Without a local proxy, the border interface returns the expected `E_NOINTERFACE`.
 2. A non-target EXE loading the proxy does not enable capture hooks.
-3. A real event allows frame retrieval, and the captured image contains the expected blue pixels.
-4. The MTA capture thread receives frames without pumping window messages.
-5. The STA capture thread receives frames without pumping window messages.
-6. Event subscription works after capture has started and existing frames have been drained.
-7. SoftwareBitmap conversion completes inside the dispatched callback.
-8. Closing a frame pool cleans up asynchronous callbacks that are still subscribed.
+3. With the executable named `codex-computer-use-swift.exe`, capture hooks activate, a real frame arrives, and asynchronous dispatch completes.
+4. A real event allows frame retrieval, and the captured image contains the expected blue pixels.
+5. The MTA capture thread receives frames without pumping window messages.
+6. The STA capture thread receives frames without pumping window messages.
+7. Event subscription works after capture has started and existing frames have been drained.
+8. SoftwareBitmap conversion completes inside the dispatched callback.
+9. Closing a frame pool cleans up asynchronous callbacks that are still subscribed.
 
 The no-pump tests disable message processing only on the **capture thread**. The test window always processes messages on its own UI thread.
 
@@ -46,9 +47,10 @@ The first test explicitly expects the interface to be missing on Windows 10. If 
 | `validation/report.json` | Timestamp, OS version, current DLL hash, individual test output, and exit codes |
 | `validation/capture.bmp` | A real capture of the probe's test window |
 | `validation/baseline/` | Baseline program without a proxy DLL |
-| `validation/unrelated/` | Program and proxy copy used to test executable-name filtering |
+| `validation/unrelated/` | Program and proxy copy used to test unrelated executable-name filtering |
+| `validation/swift-helper/` | Probe and proxy copy used to test Swift helper executable-name filtering |
 
-The suite stops on the first failure and retains results for the tests it ran. The presence of a report alone does not mean all eight tests passed. A new run overwrites the current report and image. These directories contain generated files and are excluded from version control by default.
+The suite stops on the first failure and retains results for the tests it ran. The presence of a report alone does not mean all nine tests passed. A new run overwrites the current report and image. These directories contain generated files and are excluded from version control by default.
 
 ## Running the probe directly
 

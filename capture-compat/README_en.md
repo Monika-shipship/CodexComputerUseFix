@@ -75,10 +75,10 @@ For a prebuilt release, preserve the ZIP's complete directory structure and run 
 
 ### Locate the target
 
-Install beside the `codex-computer-use.exe` that is actually running. You can inspect its path while it is active:
+Install beside the `codex-computer-use.exe` or `codex-computer-use-swift.exe` that is actually running. You can inspect its path while it is active:
 
 ```powershell
-Get-Process -Name codex-computer-use -ErrorAction SilentlyContinue |
+Get-Process -Name codex-computer-use,codex-computer-use-swift -ErrorAction SilentlyContinue |
     Select-Object Id, Path
 ```
 
@@ -111,7 +111,7 @@ The proxy must be in the helper's directory. The script does not search all runt
 
 | Parameter | Meaning |
 | --- | --- |
-| `-HelperPath <path>` | Required; must point to an existing file named `codex-computer-use.exe` |
+| `-HelperPath <path>` | Required; must point to an existing file named `codex-computer-use.exe` or `codex-computer-use-swift.exe` |
 | `-Action Install` | Installs `dist/version.dll` |
 | `-Action Uninstall` | Removes this project's proxy using its installation record |
 | `-WhatIf` | Previews operations without copying or deleting files; path and existing-file checks still run |

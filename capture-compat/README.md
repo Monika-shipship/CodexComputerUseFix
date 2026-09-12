@@ -75,10 +75,10 @@
 
 ### 确认目标路径
 
-安装对象是实际运行的 `codex-computer-use.exe`。可以在它运行时只读查看路径：
+安装对象是实际运行的 `codex-computer-use.exe` 或 `codex-computer-use-swift.exe`。可以在它运行时只读查看路径：
 
 ```powershell
-Get-Process -Name codex-computer-use -ErrorAction SilentlyContinue |
+Get-Process -Name codex-computer-use,codex-computer-use-swift -ErrorAction SilentlyContinue |
     Select-Object Id, Path
 ```
 
@@ -111,7 +111,7 @@ codex-capture-compat.install.json 安装记录
 
 | 参数 | 含义 |
 | --- | --- |
-| `-HelperPath <路径>` | 必填；必须指向已存在、文件名为 `codex-computer-use.exe` 的文件 |
+| `-HelperPath <路径>` | 必填；必须指向已存在、文件名为 `codex-computer-use.exe` 或 `codex-computer-use-swift.exe` 的文件 |
 | `-Action Install` | 安装 `dist/version.dll` |
 | `-Action Uninstall` | 按安装记录卸载本项目代理 |
 | `-WhatIf` | 预览操作，不复制或删除文件；路径与已有文件校验仍会执行 |

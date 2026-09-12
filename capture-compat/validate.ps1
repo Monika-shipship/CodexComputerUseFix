@@ -5,13 +5,16 @@ $dist = Join-Path $PSScriptRoot 'dist'
 $root = Join-Path $PSScriptRoot 'validation'
 $baseline = Join-Path $root 'baseline'
 $unrelated = Join-Path $root 'unrelated'
-New-Item -ItemType Directory -Path $root,$baseline,$unrelated -Force | Out-Null
+$swiftHelper = Join-Path $root 'swift-helper'
+New-Item -ItemType Directory -Path $root,$baseline,$unrelated,$swiftHelper -Force | Out-Null
 if (Test-Path -LiteralPath (Join-Path $baseline 'version.dll')) {
     throw 'Baseline directory contains a version.dll. Choose a clean validation directory.'
 }
 Copy-Item -LiteralPath (Join-Path $dist 'compat_probe.exe') -Destination $baseline -Force
 Copy-Item -LiteralPath (Join-Path $dist 'compat_probe.exe') -Destination (Join-Path $unrelated 'unrelated_probe.exe') -Force
 Copy-Item -LiteralPath (Join-Path $dist 'version.dll') -Destination $unrelated -Force
+Copy-Item -LiteralPath (Join-Path $dist 'compat_probe.exe') -Destination (Join-Path $swiftHelper 'codex-computer-use-swift.exe') -Force
+Copy-Item -LiteralPath (Join-Path $dist 'version.dll') -Destination $swiftHelper -Force
 $results = [System.Collections.Generic.List[object]]::new()
 function Run-Probe([string]$Name, [string]$Executable, [string[]]$Arguments) {
     $output = @(& $Executable @Arguments 2>&1 | ForEach-Object { $_.ToString() })
@@ -23,6 +26,7 @@ function Run-Probe([string]$Name, [string]$Executable, [string[]]$Arguments) {
 try {
     Run-Probe 'native Win10 baseline' (Join-Path $baseline 'compat_probe.exe') @()
     Run-Probe 'unrelated executable is not hooked' (Join-Path $unrelated 'unrelated_probe.exe') @()
+    Run-Probe 'Swift helper executable name captures a real frame' (Join-Path $swiftHelper 'codex-computer-use-swift.exe') @('--expect-shim','--capture','--expect-deferred')
     Run-Probe 'proxy and real WGC event capture' (Join-Path $dist 'compat_probe.exe') @('--expect-shim','--capture','--expect-deferred','--output',(Join-Path $root 'capture.bmp'))
     Run-Probe 'MTA without message pump' (Join-Path $dist 'compat_probe.exe') @('--expect-shim','--capture','--expect-deferred','--no-pump')
     Run-Probe 'STA without message pump' (Join-Path $dist 'compat_probe.exe') @('--expect-shim','--capture','--expect-deferred','--sta','--no-pump')

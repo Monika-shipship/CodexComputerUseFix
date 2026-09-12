@@ -13,7 +13,7 @@
 - **本地部署与回退**：仅在 helper 同目录安装 DLL 和安装记录，通过路径、文件哈希校验管理卸载。
 - **开发验证**：提供 COM 单元测试、真实 WGC 探针、独立测试窗口和可选调用日志。
 
-本项目面向 Windows 10 x64。当前实现对 `codex-computer-use.exe` 和测试程序 `compat_probe.exe` 启用兼容钩子，影响范围限于加载该 DLL 的进程；不修改系统 DLL，不注册全局钩子。
+本项目面向 Windows 10 x64。当前实现对 `codex-computer-use.exe`、新版 `codex-computer-use-swift.exe` 和测试程序 `compat_probe.exe` 启用兼容钩子，影响范围限于加载该 DLL 的进程；不修改系统 DLL，不注册全局钩子。
 
 ## 下载预编译版本
 
@@ -48,7 +48,7 @@ Set-Location .\capture-compat
 
 ### 安装
 
-先确认实际使用的 `codex-computer-use.exe` 路径。下面的路径是占位示例，使用前必须替换。
+先确认实际使用的 `codex-computer-use.exe` 或 `codex-computer-use-swift.exe` 路径。下面的路径是占位示例，使用前必须替换。
 
 在 `capture-compat` 目录中执行：
 

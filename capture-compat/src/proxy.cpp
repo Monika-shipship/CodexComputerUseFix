@@ -52,7 +52,9 @@ BOOL WINAPI DllMain(HINSTANCE, DWORD reason, LPVOID) {
         if (!length || length >= _countof(path)) return TRUE;
         const wchar_t* name = wcsrchr(path, L'\\');
         name = name ? name + 1 : path;
-        if (_wcsicmp(name, L"codex-computer-use.exe") == 0 || _wcsicmp(name, L"compat_probe.exe") == 0)
+        if (_wcsicmp(name, L"codex-computer-use.exe") == 0 ||
+            _wcsicmp(name, L"codex-computer-use-swift.exe") == 0 ||
+            _wcsicmp(name, L"compat_probe.exe") == 0)
             capture_compat::Initialize(GetModuleHandleW(nullptr));
     }
     return TRUE;
