@@ -84,6 +84,10 @@ Get-Process -Name codex-computer-use,codex-computer-use-swift -ErrorAction Silen
 
 If multiple processes appear, identify the runtime used by the current Computer Use instance. Do not deploy to every old installation directory. If the process is stopped or access is insufficient, the list may be empty or omit the path.
 
+**Both helpers can coexist.** A desktop host may start the Swift helper and launch the legacy-named helper on demand for native Computer Use. Confirming that Swift loaded the proxy does not establish which process handles screenshots. Trigger an official screenshot request, inspect both process paths, and verify the capture process's loaded modules. Do not rename executables, bypass app approval, or change safety checks to switch routes.
+
+During upgrades the host may restart a helper between uninstall and install, causing it to load the system DLL. Verify loaded modules after the new DLL is in place and restart that helper again if needed. Matching on-disk hashes alone cannot establish that the running process loaded the patch.
+
 ### First installation
 
 ```powershell

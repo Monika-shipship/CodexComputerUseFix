@@ -84,6 +84,10 @@ Get-Process -Name codex-computer-use,codex-computer-use-swift -ErrorAction Silen
 
 如果有多个结果，确认当前 Computer Use 使用的是哪一个 runtime；不要根据某个旧安装目录批量部署。进程未运行或权限不足时，列表可能为空或不显示路径。
 
+**两个 helper 可能同时存在。** 同一 Codex 桌面进程可能启动 Swift helper，并在调用原生 Computer Use 时按需启动旧名 helper。只确认 Swift 进程加载了 DLL，不能证明实际截图请求使用它。先触发官方截图请求，再查看两种进程路径并核对实际截图进程的加载模块。不要通过改名 EXE、跳过应用授权或修改安全检查来切换入口。
+
+升级时宿主可能在卸载与安装之间立即重启 helper，使其加载系统 DLL。新补丁就位后应再次核对加载模块，必要时再重启该 helper。磁盘文件哈希匹配不能代替此检查。
+
 ### 首次安装
 
 ```powershell

@@ -109,6 +109,8 @@ New-Item -ItemType Directory -Path .\validation -Force | Out-Null
 
 ## 在官方 helper 中验证
 
+以 `codex-computer-use-swift.exe` 命名的探针仍是本项目探针，不是官方 Swift 实现。它只验证进程名筛选及探针自身的捕获路径，不能证明官方截图或输入成功。两个 helper 共存时，应按[目标路径说明](../README.md#确认目标路径)定位实际处理请求的进程。
+
 安装并重新启动相应 helper 后：
 
 1. 打开 `dist/capture_test_window.exe`。
@@ -118,6 +120,8 @@ New-Item -ItemType Directory -Path .\validation -Force | Out-Null
 5. 分别验证不带截图的辅助功能读取，最后关闭测试窗口。
 
 底层探针没有复刻所有官方调用路径，不能用其通过结果替代这一步。记录当前 helper 和 DLL 的 SHA-256、操作是否成功及调用耗时，便于不同构建之间比较。
+
+2026-09-12 本机端到端测试：Windows 10 Pro 22H2、COMSOL 5.2a，通过官方 `sky` API 激活空白 COMSOL 窗口、获取截图、点击参数面板、输入 `cu_test` 和 `sqrt(3^2+4^2)`，按 Tab 后从截图和辅助功能树确认结果为 `5`。实际截图使用旧名 `codex-computer-use.exe`；仅给并存的 Swift helper 安装补丁时仍报 `0x80004002`。此测试覆盖简单表达式计算，不覆盖有限元求解或所有输入方法；`set_value` 曾超时，最终使用点击与键盘输入完成。
 
 ## 日志定位
 

@@ -109,6 +109,8 @@ The probe limits how long it waits for frames, observes conversion status, and c
 
 ## Validation through the official helper
 
+A probe renamed to `codex-computer-use-swift.exe` is still this project's probe, not the official Swift implementation. It validates name filtering and the probe's capture path only, not official screenshots or input. When both helpers coexist, identify the request-handling process using the [target-path guidance](../README_en.md#locate-the-target).
+
 After installing the DLL and restarting the corresponding helper:
 
 1. Open `dist/capture_test_window.exe`.
@@ -118,6 +120,8 @@ After installing the DLL and restarting the corresponding helper:
 5. Separately check accessibility reads without screenshots, then close the test window.
 
 The probe does not reproduce every official call path, so its result does not replace this step. Record the helper and DLL SHA-256 hashes, whether each operation succeeded, and its duration to compare builds.
+
+Local end-to-end test on 2026-09-12: Windows 10 Pro 22H2, COMSOL 5.2a, official `sky` API. Activated a blank COMSOL window, captured it, clicked the Parameters panel, typed `cu_test` and `sqrt(3^2+4^2)`, and pressed Tab. Both the screenshot and accessibility tree showed the computed value `5`. The screenshot path used the legacy-named `codex-computer-use.exe`; patching only the coexisting Swift helper left `0x80004002` unchanged. This covers a simple expression evaluation, not finite-element solving or every input method. `set_value` timed out; clicks and keyboard input completed the test.
 
 ## Using trace logs
 
